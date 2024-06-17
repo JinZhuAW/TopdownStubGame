@@ -8,6 +8,7 @@ namespace Completed
 	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 	public class Player : MovingObject
 	{
+		
 		public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
 		public int pointsPerFood = 10;				//Number of points to add to player food points when picking up a food object.
 		public int pointsPerSoda = 20;				//Number of points to add to player food points when picking up a soda object.
@@ -23,17 +24,28 @@ namespace Completed
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;                           //Used to store player food points total during level.
+
+		private int ingredientCounter = 0;
+		public int ingredientsNeeded = 3;
+
+		private int finalLevel;
+		private int currentLevel;               //Nebel: Setting a max level and current level checker
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
-		
-		
+
+
 		//Start overrides the Start function of MovingObject
 		protected override void Start ()
 		{
+			//ingredientCounter = 0;
+
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
-			
+
+			currentLevel = GameManager.instance.level;
+			finalLevel = GameManager.instance.finalLevel;
+
 			//Get the current food point total stored in GameManager.instance between levels.
 			food = GameManager.instance.playerFoodPoints;
 			
@@ -176,18 +188,25 @@ namespace Completed
 		private void OnTriggerEnter2D (Collider2D other)
 		{
 			//Check if the tag of the trigger collided with is Exit.
-			if(other.tag == "Exit")
+			if(other.tag == "Exit" && ingredientCounter == ingredientsNeeded)
 			{
-				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
-				Invoke ("Restart", restartLevelDelay);
-				
-				//Disable the player object since level is over.
-				enabled = false;
+				if(currentLevel == finalLevel)
+                {
+					gameOver();
+                }
+                else
+                {
+					//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
+					Invoke("Restart", restartLevelDelay);
+
+					//Disable the player object since level is over.
+					enabled = false;
+				}
 			}
 			
 			//Check if the tag of the trigger collided with is Food.
 			else if(other.tag == "Food")
-			{
+			{	
 				//Add pointsPerFood to the players current food total.
 				food += pointsPerFood;
 				
@@ -216,6 +235,17 @@ namespace Completed
 				//Disable the soda object the player collided with.
 				other.gameObject.SetActive (false);
 			}
+
+			if (other.tag == "Food" || other.tag == "Soda")
+            {
+				ingredientCollected();
+            }
+		}
+
+		private void ingredientCollected()
+        {
+			ingredientCounter++;
+			Debug.Log(ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + "ingredients collected!");
 		}
 		
 		
@@ -223,8 +253,8 @@ namespace Completed
 		private void Restart ()
 		{
 			//Load the last scene loaded, in this case Main, the only scene in the game. And we load it in "Single" mode so it replace the existing one
-            //and not load all the scene object in the current scene.
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+			//and not load all the scene object in the current scene.
+			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
 		}
 		
 		
@@ -252,15 +282,20 @@ namespace Completed
 			//Check if food point total is less than or equal to zero.
 			if (food <= 0) 
 			{
-				//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-				SoundManager.instance.PlaySingle (gameOverSound);
-				
-				//Stop the background music.
-				SoundManager.instance.musicSource.Stop();
-				
-				//Call the GameOver function of GameManager.
-				GameManager.instance.GameOver ();
+				gameOver();
 			}
+		}
+
+		private void gameOver()
+        {
+			//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
+			SoundManager.instance.PlaySingle(gameOverSound);
+
+			//Stop the background music.
+			SoundManager.instance.musicSource.Stop();
+
+			//Call the GameOver function of GameManager.
+			GameManager.instance.GameOver();
 		}
 	}
 }
