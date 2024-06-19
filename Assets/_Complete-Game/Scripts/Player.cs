@@ -48,10 +48,11 @@ namespace Completed
 
 			//Get the current food point total stored in GameManager.instance between levels.
 			food = GameManager.instance.playerFoodPoints;
-			
+
 			//Set the foodText to reflect the current player food total.
-			foodText.text = "Food: " + food;
-			
+			//foodText.text = "Food: " + food;
+			foodText.text = "Health: " + food + ", (" + ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + ") ingredients collected";
+
 			//Call the Start function of the MovingObject base class.
 			base.Start ();
 		}
@@ -143,11 +144,14 @@ namespace Completed
 		protected override void AttemptMove <T> (int xDir, int yDir)
 		{
 			//Every time player moves, subtract from food points total.
-			food--;
-			
+			//food--;
+			//food will not decrease for now
+
 			//Update food text display to reflect current score.
-			foodText.text = "Food: " + food;
-			
+			//foodText.text = "Food: " + food;
+
+			foodText.text = "Health: " + food + ", (" + ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + ") ingredients collected";
+
 			//Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
 			base.AttemptMove <T> (xDir, yDir);
 			
@@ -245,7 +249,23 @@ namespace Completed
 		private void ingredientCollected()
         {
 			ingredientCounter++;
-			Debug.Log(ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + "ingredients collected!");
+
+			//Add pointsPerFood to the players current food total.
+			//food += pointsPerFood;
+
+			//Update foodText to represent current total and notify player that they gained points
+			//foodText.text = "+" + pointsPerFood + " Food: " + food;
+
+			if(ingredientCounter == ingredientsNeeded)
+            {
+				foodText.text = "Health: " + food + ", all ingredients collected!";
+			}
+            else
+            {
+				foodText.text = "Health: " + food + ", (" + ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + ") ingredients collected";
+			}
+
+			//Debug.Log(ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + "ingredients collected!");
 		}
 		
 		
