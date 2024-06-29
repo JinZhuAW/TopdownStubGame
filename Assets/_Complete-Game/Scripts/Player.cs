@@ -52,6 +52,7 @@ namespace Completed
 			//Set the foodText to reflect the current player food total.
 			//foodText.text = "Food: " + food;
 			foodText.text = "Health: " + food + ", (" + ingredientCounter.ToString() + "/" + ingredientsNeeded.ToString() + ") ingredients collected";
+			foodText.text = "";
 
 			//Call the Start function of the MovingObject base class.
 			base.Start ();
