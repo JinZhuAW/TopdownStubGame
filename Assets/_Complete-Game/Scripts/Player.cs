@@ -23,22 +23,28 @@ namespace Completed
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;                           //Used to store player food points total during level.
+		private GameObject firstingredient;
+        private GameObject secondingredient;
+        private GameObject thirdingredient;
+        private Sprite[] spriteSheetSprites;
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
-		
-		
-		//Start overrides the Start function of MovingObject
-		protected override void Start ()
+
+
+        //Start overrides the Start function of MovingObject
+        protected override void Start ()
 		{
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
-			
-			//Get the current food point total stored in GameManager.instance between levels.
-			food = GameManager.instance.playerFoodPoints;
-			
-			//Set the foodText to reflect the current player food total.
-			foodText.text = "Food: " + food;
+			spriteSheetSprites = Resources.LoadAll<Sprite>("Scavengers_SpriteSheet");
+            //Get the current food point total stored in GameManager.instance between levels.
+            food = GameManager.instance.playerFoodPoints;
+			firstingredient = GameManager.instance.firstIngredient;
+            secondingredient = GameManager.instance.secondIngredient;
+			thirdingredient = GameManager.instance.thirdIngredient;
+            //Set the foodText to reflect the current player food total.
+            foodText.text = "Food: " + food;
 			
 			//Call the Start function of the MovingObject base class.
 			base.Start ();
@@ -193,9 +199,10 @@ namespace Completed
 				
 				//Update foodText to represent current total and notify player that they gained points
 				foodText.text = "+" + pointsPerFood + " Food: " + food;
-				
-				//Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
-				SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
+				Sprite i = spriteSheetSprites[19];
+				firstingredient.GetComponent<Image>().sprite = i;
+                //Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
+                SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
 				
 				//Disable the food object the player collided with.
 				other.gameObject.SetActive (false);
@@ -209,9 +216,10 @@ namespace Completed
 				
 				//Update foodText to represent current total and notify player that they gained points
 				foodText.text = "+" + pointsPerSoda + " Food: " + food;
-				
-				//Call the RandomizeSfx function of SoundManager and pass in two drinking sounds to choose between to play the drinking sound effect.
-				SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
+                Sprite i = spriteSheetSprites[18];
+                secondingredient.GetComponent<Image>().sprite = i;
+                //Call the RandomizeSfx function of SoundManager and pass in two drinking sounds to choose between to play the drinking sound effect.
+                SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
 				
 				//Disable the soda object the player collided with.
 				other.gameObject.SetActive (false);

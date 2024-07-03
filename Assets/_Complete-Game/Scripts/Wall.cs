@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace Completed
 {
@@ -32,11 +33,16 @@ namespace Completed
 			
 			//Subtract loss from hit point total.
 			hp -= loss;
-			
+
 			//If hit points are less than or equal to zero:
-			if(hp <= 0)
-				//Disable the gameObject.
-				gameObject.SetActive (false);
-		}
+			if (hp <= 0)
+			//Disable the gameObject.
+			{
+                GameManager.instance.thirdIngredient.GetComponent<Image>().sprite = gameObject.GetComponent<SpriteRenderer>().sprite;
+                gameObject.SetActive(false);
+				
+			}
+
+        }
 	}
 }
