@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic; 		//Allows us to use Lists.
-using Random = UnityEngine.Random; 		//Tells Random to use the Unity Engine random number generator.
+using Random = UnityEngine.Random;
+using Unity.VisualScripting; 		//Tells Random to use the Unity Engine random number generator.
 
 namespace Completed
 	
@@ -29,7 +30,7 @@ namespace Completed
 		public int columns = 8; 										//Number of columns in our game board.
 		public int rows = 8;											//Number of rows in our game board.
 		public Count wallCount = new Count (5, 9);						//Lower and upper limit for our random number of walls per level.
-		public Count foodCount = new Count (1, 5);						//Lower and upper limit for our random number of food items per level.
+		public Count foodCount = new Count (2, 5);						//Lower and upper limit for our random number of food items per level.
 		public GameObject exit;											//Prefab to spawn for exit.
 		public GameObject[] floorTiles;									//Array of floor prefabs.
 		public GameObject[] wallTiles;									//Array of wall prefabs.
@@ -57,7 +58,7 @@ namespace Completed
 					gridPositions.Add (new Vector3(x, y, 0f));
 				}
 			}
-		}
+        }
 		
 		
 		//Sets up the outer walls and floor (background) of the game board.

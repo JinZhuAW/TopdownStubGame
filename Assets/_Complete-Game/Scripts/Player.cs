@@ -37,7 +37,7 @@ namespace Completed
 		{
 			//Get a component reference to the Player's animator component
 			animator = GetComponent<Animator>();
-			spriteSheetSprites = Resources.LoadAll<Sprite>("Scavengers_SpriteSheet");
+			spriteSheetSprites = Resources.LoadAll<Sprite>("Food");
             //Get the current food point total stored in GameManager.instance between levels.
             food = GameManager.instance.playerFoodPoints;
 			firstingredient = GameManager.instance.firstIngredient;
@@ -192,14 +192,14 @@ namespace Completed
 			}
 			
 			//Check if the tag of the trigger collided with is Food.
-			else if(other.tag == "Food")
+			else if(other.tag == "Strawberry")
 			{
 				//Add pointsPerFood to the players current food total.
 				food += pointsPerFood;
 				
 				//Update foodText to represent current total and notify player that they gained points
 				foodText.text = "+" + pointsPerFood + " Food: " + food;
-				Sprite i = spriteSheetSprites[19];
+				Sprite i = other.GetComponent<SpriteRenderer>().sprite;
 				firstingredient.GetComponent<Image>().sprite = i;
                 //Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
                 SoundManager.instance.RandomizeSfx (eatSound1, eatSound2);
@@ -209,14 +209,14 @@ namespace Completed
 			}
 			
 			//Check if the tag of the trigger collided with is Soda.
-			else if(other.tag == "Soda")
+			else if(other.tag == "Turnip")
 			{
 				//Add pointsPerSoda to players food points total
 				food += pointsPerSoda;
 				
 				//Update foodText to represent current total and notify player that they gained points
 				foodText.text = "+" + pointsPerSoda + " Food: " + food;
-                Sprite i = spriteSheetSprites[18];
+				Sprite i = other.GetComponent<SpriteRenderer>().sprite;
                 secondingredient.GetComponent<Image>().sprite = i;
                 //Call the RandomizeSfx function of SoundManager and pass in two drinking sounds to choose between to play the drinking sound effect.
                 SoundManager.instance.RandomizeSfx (drinkSound1, drinkSound2);
